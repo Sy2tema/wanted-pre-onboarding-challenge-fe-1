@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Auth from "../components/auth/Auth.js";
+import Auth from "../components/auth/Auth.jsx";
 
 const SignUp = () => {
     const [email, setEmail] = useState();
