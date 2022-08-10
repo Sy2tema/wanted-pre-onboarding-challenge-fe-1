@@ -1,12 +1,13 @@
+import React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Auth from "../components/auth/Auth.jsx";
+import Auth from "../components/auth/Auth";
 
 const SignUp = () => {
     const [email, setEmail] = useState();
 
     return (
-        <div class="App-header">
+        <div className="App-header">
             <h1>회원가입</h1>
             <input type="email" id="email" />
             <input type="password" id="password" />
