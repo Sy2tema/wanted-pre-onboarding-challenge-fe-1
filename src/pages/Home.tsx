@@ -9,7 +9,9 @@ const Home = () => {
             <input type="email" id="email" />
             <input type="password" id="password" />
             <div>
-                <button ref="">로그인</button>
+                <Link to="/todo">
+                    <button>로그인</button>
+                </Link>
                 <Link to="/signup">
                     <button>회원가입</button>
                 </Link>
