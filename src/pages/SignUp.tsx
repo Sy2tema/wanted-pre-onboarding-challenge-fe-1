@@ -1,7 +1,9 @@
-import React, { useCallback } from 'react';
+import axios from 'axios';
+import React, { HtmlHTMLAttributes, useCallback } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Auth from "../components/auth/Auth";
+import Router from '../router/Router';
 
 const SignUp = () => {
     const [email, setEmail] = useState<string>("");
@@ -16,20 +18,27 @@ const SignUp = () => {
 
     // 제출 버튼이 눌렸을 경우 API를 호출
     // useCallback함수를 이용해 onSubmit을 재사용한다
-    const onSubmit = ()=>{};
-    // const onSubmit = useCallback(
-    //     async (event: React.FormEvent<HTMLFormElement>) => { 
-    //         event.preventDefault();
-    //         try {
-    //             // exios사용해 서버와 연결
-    //             await 
-
-    //         } catch(err) {
-    //             console.error(err);
-    //         }
-    //     },
-    //     [email, password]
-    // );
+    const handleSubmit = useCallback(
+        async(event: React.FormEvent<HTMLFormElement>) => {
+            event.preventDefault();
+            console.log(event);
+            try {
+                await axios
+                    .post("users/login", {
+                        email: email,
+                        password: password,
+                    })
+                    .then((response) => {
+                        console.log(`응답: ${response}`);
+                        // 상태값이 200이면 정상적으로 응답을 수신했다는 뜻
+                        if (response.status === 200) {
+                            
+                        }
+                    })
+            } catch(err) {
+                console.error(err);
+            }
+    }, [email, password]);
 
     // 이메일 유효성 검사
     const onChangeEmail = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +62,7 @@ const SignUp = () => {
     const onChangePassword = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         // 비밀번호 유효성 검사를 위한 정규식
         // 최소한 8글자가 되어야 한다
-        const passwordRegex = /\w#?!@$ %^&*-]{8,}/;
+        const passwordRegex = /[\w#?!@$ %^&*-]{8,}/;
         const passwordValue = event.target.value;
         setPassword(passwordValue);
 
@@ -75,6 +84,7 @@ const SignUp = () => {
             console.log("비밀번호 일치");
             setIsConfirmPassword(true);
         } else {
+            console.log(`${password} | ${confirmPassword}`);
             console.log("비밀번호 불일치");
             setIsConfirmPassword(false);
         }
@@ -82,13 +92,13 @@ const SignUp = () => {
 
     return (
         <>
-            <form className="App-header" onSubmit={onSubmit}>
+            <form className="App-header" onSubmit={handleSubmit}>
                 <h1>회원가입</h1>
                 <div>
-                    <input id="email" type="email" onChange={onChangeEmail} />
+                    <input id="email" type="email" value={email} onChange={onChangeEmail} />
                 </div>
                 <div>
-                    <input id="password" type="password" onChange={onChangePassword} />
+                    <input id="password" type="password" value={password} onChange={onChangePassword} />
                 </div>
                 <div>
                     <input id="confirmPassword" type="password" onChange={onChangeConfirmPassword} />
@@ -97,21 +107,11 @@ const SignUp = () => {
                     <button
                         type="submit"
                         disabled={!(isEmail && isPassword && isConfirmPassword)}
-                    >회원가입</button>
+                    >제출</button>
                 </section>
             </form>
         </>
     );
 };
 
-{/* <div className="App-header">
-                <h1>회원가입</h1>
-                <form className="auth" method="post" action="/users/create" onSubmit={onSubmit}>
-                    <input type="email" id="email" />
-                    <input type="password" id="password" />
-                </form>
-                <Link to="/">
-                    <button>제출</button>
-                </Link>
-            </div> */}
 export default SignUp;
