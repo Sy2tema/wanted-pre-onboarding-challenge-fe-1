@@ -1,44 +1,49 @@
 import axios from 'axios';
 import React, { HtmlHTMLAttributes, useCallback } from 'react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Auth from "../components/auth/Auth";
 import Router from '../router/Router';
+import { BASE_URL } from "../config/properties";
 
 const SignUp = () => {
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [confirmPassword, setConfirmPassword] = useState<string>("");
-    const [token, setToken] = useState<string>("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     // 유효성 검사
-    const [isEmail, setIsEmail] = useState<boolean>(false);
-    const [isPassword, setIsPassword] = useState<boolean>(false);
-    const [isConfirmPassword, setIsConfirmPassword] = useState<boolean>(false);
+    const [isEmail, setIsEmail] = useState(false);
+    const [isPassword, setIsPassword] = useState(false);
+    const [isConfirmPassword, setIsConfirmPassword] = useState(false);
+    const navigate = useNavigate();
 
     // 제출 버튼이 눌렸을 경우 API를 호출
     // useCallback함수를 이용해 onSubmit을 재사용한다
     const handleSubmit = useCallback(
         async(event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
-            console.log(event);
+            console.log(event.target);
             try {
                 await axios
-                    .post("users/login", {
+                    .post(`${BASE_URL}/users/create`, {
                         email: email,
                         password: password,
                     })
                     .then((response) => {
-                        console.log(`응답: ${response}`);
                         // 상태값이 200이면 정상적으로 응답을 수신했다는 뜻
+                        // 서버에 이미 있는 이메일일 경우 홈으로 돌아가지 않도록 처리ㅌ
                         if (response.status === 200) {
-                            
+                            console.log(response);
+                            navigate("/");
                         }
-                    })
+                    });
             } catch(err) {
                 console.error(err);
+                setEmail("");
+                setPassword("");
+                setConfirmPassword("");
             }
-    }, [email, password]);
+    }, [email, password, confirmPassword]);
 
     // 이메일 유효성 검사
     const onChangeEmail = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,12 +84,12 @@ const SignUp = () => {
     const onChangeConfirmPassword = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         const confirmPasswordValue = event.target.value;
         setConfirmPassword(confirmPasswordValue);
+        console.log(`${password} | ${confirmPasswordValue}`);
 
-        if (password === confirmPassword) {
+        if (password === confirmPasswordValue) {
             console.log("비밀번호 일치");
             setIsConfirmPassword(true);
         } else {
-            console.log(`${password} | ${confirmPassword}`);
             console.log("비밀번호 불일치");
             setIsConfirmPassword(false);
         }
@@ -101,7 +106,7 @@ const SignUp = () => {
                     <input id="password" type="password" value={password} onChange={onChangePassword} />
                 </div>
                 <div>
-                    <input id="confirmPassword" type="password" onChange={onChangeConfirmPassword} />
+                    <input id="confirmPassword" type="password" value={confirmPassword} onChange={onChangeConfirmPassword} />
                 </div>
                 <section>
                     <button
