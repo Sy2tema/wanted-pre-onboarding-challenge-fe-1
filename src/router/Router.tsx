@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Auth from "../components/auth/Auth";
+import Auth from "../auth/Auth";
 import Home from "../pages/Home";
 import SignUp from "../pages/SignUp";
 import Todo from "../pages/Todo";
