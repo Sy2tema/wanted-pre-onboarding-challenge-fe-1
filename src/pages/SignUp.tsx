@@ -2,9 +2,9 @@ import axios from 'axios';
 import React, { HtmlHTMLAttributes, useCallback } from 'react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Auth from "../components/auth/Auth";
+import Auth from "../auth/Auth";
 import Router from '../router/Router';
-import { BASE_URL } from "../config/properties";
+import { PROPERTIES } from "../config/properties";
 
 const SignUp = () => {
     const [email, setEmail] = useState("");
@@ -22,16 +22,17 @@ const SignUp = () => {
     const handleSubmit = useCallback(
         async(event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
-            console.log(event.target);
             try {
                 await axios
-                    .post(`${BASE_URL}/users/create`, {
+                    .post('/users/create', {
                         email: email,
                         password: password,
+                    }, {
+                        withCredentials: true, // 쿠키 CORS통신 설정
                     })
                     .then((response) => {
                         // 상태값이 200이면 정상적으로 응답을 수신했다는 뜻
-                        // 서버에 이미 있는 이메일일 경우 홈으로 돌아가지 않도록 처리ㅌ
+                        // 서버에 이미 있는 이메일일 경우 홈으로 돌아가지 않도록 처리
                         if (response.status === 200) {
                             console.log(response);
                             navigate("/");

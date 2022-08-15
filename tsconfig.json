@@ -4,7 +4,8 @@
     "module": "esnext",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "strict": true, 
+    "strictNullChecks": true, /* Null타입을 엄격하게 체크하기 위한 옵션 */
     "skipLibCheck": true,
     "lib": [
       "dom",

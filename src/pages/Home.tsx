@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL } from '../config/properties';
+import { PROPERTIES } from '../config/properties';
 
 const Home = () => {
     const [email, setEmail] = useState("");
@@ -15,7 +15,7 @@ const Home = () => {
 
             try {
                 await axios
-                    .post(`${BASE_URL}/users/login`, {
+                    .post('/users/login', {
                         email,
                         password,
                     })
